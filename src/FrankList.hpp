@@ -573,10 +573,7 @@ namespace vhuk {
     template <typename T>
     FrankList<T>::FrankList(FrankList<T>&& other) : FrankList()
     {
-        std::swap(m_Head, other.m_Head);
-        std::swap(m_Tail, other.m_Tail);
-        std::swap(m_AHead, other.m_AHead);
-        std::swap(m_ATail, other.m_ATail);
+        swap(other);
     }
 
     template <typename T>
@@ -973,15 +970,25 @@ namespace vhuk {
     iter FrankList<T>::insert(iter pos, input_iterator begin, input_iterator end)
     {
         Node* node = pos.m_Ptr;
+        Node* new_node = nullptr;
         for (auto it = begin; it != end; ++it)
         {
-            auto* prev_next = node->next;
-            auto* new_node  = new Node(*it);
-            node->next      = new_node;
-            new_node->next  = prev_next;
-            node            = new_node;
+            new_node = new Node(*it);
+            if (node)
+            {
+                auto* prev_next = node->next;
+                node->next      = new_node;
+                new_node->next  = prev_next;
+            }
+            else
+                m_Head = new_node;
+            node = new_node;
             put_in_sorted_order(new_node);
         }
+        
+        if (pos.m_Ptr == m_Tail)
+            m_Tail = new_node;
+
         return pos;
     }
 
@@ -990,10 +997,31 @@ namespace vhuk {
     iter FrankList<T>::erase(iter pos)
     {
         Node* node       = pos.m_Ptr;
-        node->prev->next = node->next;
-        node->next->prev = node->prev;
-        node->desc->asc  = node->asc;
-        node->asc->desc  = node->desc;
+        if (node->prev)
+        {
+            node->prev->next = node->next;
+            if (node == m_Tail)
+                m_Tail = node->prev;
+        }
+        if (node->next)
+        {
+            node->next->prev = node->prev;
+            if (node == m_Head)
+                m_Head = node->next;
+        }
+        if (node->desc)
+        {
+            node->desc->asc  = node->asc;
+            if (node == m_ATail)
+                m_ATail = node->desc;
+        }
+        if (node->asc)
+        {
+            node->asc->desc = node->desc;
+            if (node == m_ATail)
+                m_ATail = node->asc;
+        }
+        
         delete node;
         return pos;
     }
@@ -1002,17 +1030,9 @@ namespace vhuk {
     template <typename iter>
     iter FrankList<T>::erase(iter begin, iter end)
     {
-        Node* prev_node      = begin.m_Ptr->prev;
-        Node* next_node      = end.m_Ptr->next;
-        Node* prev_node_asc  = prev_node->asc;
-        Node* next_node_desc = next_node->desc;
-
-        prev_node->next = next_node;
-        next_node->prev = prev_node;
-
         for (auto it = begin; it != end; ++it)
-            delete it.m_Ptr;
-        return begin;
+            erase(it);
+        return end;
     }
 
     template <typename T>

@@ -2,6 +2,7 @@
 #define FRANKLIST_H
 
 #include <iostream>
+#include <iterator>
 
 namespace vhuk {
     template <typename T>
@@ -31,6 +32,15 @@ namespace vhuk {
         class base_iterator
         {
             friend FrankList<value_type>;
+
+        public:
+            using value_type        = T;
+            using difference_type   = std::ptrdiff_t;
+            using pointer           = value_type*;
+            using const_pointer     = const value_type*;
+            using reference         = value_type&;
+            using const_reference = const value_type&;
+            using iterator_category = std::bidirectional_iterator_tag;
 
         protected:
             Node* m_Ptr = nullptr;
