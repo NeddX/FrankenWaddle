@@ -475,7 +475,7 @@ namespace vhuk {
     template <typename T>
     const typename FrankList<T>::const_desc_iterator& FrankList<T>::const_desc_iterator::operator--()
     {
-        base_iterator::m_Ptr = base_iterator::m_Ptr->desc;
+        base_iterator::m_Ptr = base_iterator::m_Ptr->asc;
         return *this;
     }
 
@@ -536,6 +536,282 @@ namespace vhuk {
     }
 
     template <typename T>
+    FrankList<T>::const_multi_iterator::const_multi_iterator(const base_iterator& other) : base_iterator(other)
+    {
+    }
+
+    template <typename T>
+    FrankList<T>::const_multi_iterator::const_multi_iterator(base_iterator&& other) : base_iterator(std::move(other))
+    {
+    }
+
+    template <typename T>
+    FrankList<T>::const_multi_iterator::const_multi_iterator(Node* ptr) : base_iterator(ptr)
+    {
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_iterator& FrankList<T>::const_multi_iterator::operator=(
+        const base_iterator& other)
+    {
+        if (this == &other)
+            return *this;
+
+        base_iterator::m_Ptr = other.m_Ptr;
+        return *this;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_iterator& FrankList<T>::const_multi_iterator::operator=(
+        base_iterator&& other)
+    {
+        if (this == &other)
+            return *this;
+
+        base_iterator::m_Ptr = other.m_Ptr;
+        other.m_Ptr          = nullptr;
+        return *this;
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_reference FrankList<T>::const_multi_iterator::operator*() const
+    {
+        return base_iterator::m_Ptr->val;
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_pointer FrankList<T>::const_multi_iterator::operator->() const
+    {
+        return base_iterator::m_Ptr->val;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_iterator& FrankList<T>::const_multi_iterator::operator++()
+    {
+        base_iterator::m_Ptr = (mode) ? base_iterator::m_Ptr->next : base_iterator::m_Ptr->asc;
+        return *this;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_iterator FrankList<T>::const_multi_iterator::operator++(value_type)
+    {
+        const auto cpy = *this;
+        ++(*this);
+        return cpy;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_iterator& FrankList<T>::const_multi_iterator::operator--()
+    {
+        base_iterator::m_Ptr = (mode) ? base_iterator::m_Ptr->prev : base_iterator::m_Ptr->desc;
+        return *this;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_iterator FrankList<T>::const_multi_iterator::operator--(value_type)
+    {
+        const auto cpy = *this;
+        --(*this);
+        return cpy;
+    }
+
+    template <typename T>
+    FrankList<T>::multi_iterator::multi_iterator(const base_iterator& other) : const_desc_iterator(other)
+    {
+    }
+
+    template <typename T>
+    FrankList<T>::multi_iterator::multi_iterator(base_iterator&& other) : const_desc_iterator(std::move(other))
+    {
+    }
+
+    template <typename T>
+    FrankList<T>::multi_iterator::multi_iterator(Node* ptr) : const_desc_iterator(ptr)
+    {
+    }
+
+    template <typename T>
+    const typename FrankList<T>::multi_iterator& FrankList<T>::multi_iterator::operator=(const base_iterator& other)
+    {
+        if (this == &other)
+            return *this;
+
+        base_iterator::m_Ptr = other.m_Ptr;
+        return *this;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::multi_iterator& FrankList<T>::multi_iterator::operator=(base_iterator&& other)
+    {
+        if (this == &other)
+            return *this;
+
+        base_iterator::m_Ptr = other.m_Ptr;
+        other.m_Ptr          = nullptr;
+        return *this;
+    }
+
+    template <typename T>
+    typename FrankList<T>::reference FrankList<T>::multi_iterator::operator*()
+    {
+        return base_iterator::m_Ptr->val;
+    }
+
+    template <typename T>
+    typename FrankList<T>::pointer FrankList<T>::multi_iterator::operator->()
+    {
+        return base_iterator::m_Ptr->val;
+    }
+
+    template <typename T>
+    void FrankList<T>::const_multi_iterator::chmod()
+    {
+        mode = !mode;
+    }
+
+    template <typename T>
+    FrankList<T>::const_multi_reverse_iterator::const_multi_reverse_iterator(const base_iterator& other)
+        : base_iterator(other)
+    {
+    }
+
+    template <typename T>
+    FrankList<T>::const_multi_reverse_iterator::const_multi_reverse_iterator(base_iterator&& other)
+        : base_iterator(std::move(other))
+    {
+    }
+
+    template <typename T>
+    FrankList<T>::const_multi_reverse_iterator::const_multi_reverse_iterator(Node* ptr) : base_iterator(ptr)
+    {
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_reverse_iterator& FrankList<T>::const_multi_reverse_iterator::operator=(
+        const base_iterator& other)
+    {
+        if (this == &other)
+            return *this;
+
+        base_iterator::m_Ptr = other.m_Ptr;
+        return *this;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_reverse_iterator& FrankList<T>::const_multi_reverse_iterator::operator=(
+        base_iterator&& other)
+    {
+        if (this == &other)
+            return *this;
+
+        base_iterator::m_Ptr = other.m_Ptr;
+        other.m_Ptr          = nullptr;
+        return *this;
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_reference FrankList<T>::const_multi_reverse_iterator::operator*() const
+    {
+        return base_iterator::m_Ptr->val;
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_pointer FrankList<T>::const_multi_reverse_iterator::operator->() const
+    {
+        return base_iterator::m_Ptr->val;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_reverse_iterator& FrankList<T>::const_multi_reverse_iterator::operator++()
+    {
+        base_iterator::m_Ptr = (mode) ? base_iterator::m_Ptr->prev : base_iterator::m_Ptr->desc;
+        return *this;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_reverse_iterator FrankList<T>::const_multi_reverse_iterator::operator++(
+        value_type)
+    {
+        const auto cpy = *this;
+        ++(*this);
+        return cpy;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_reverse_iterator& FrankList<T>::const_multi_reverse_iterator::operator--()
+    {
+        base_iterator::m_Ptr = (mode) ? base_iterator::m_Ptr->next : base_iterator::m_Ptr->asc;
+        return *this;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::const_multi_reverse_iterator FrankList<T>::const_multi_reverse_iterator::operator--(
+        value_type)
+    {
+        const auto cpy = *this;
+        --(*this);
+        return cpy;
+    }
+
+    template <typename T>
+    FrankList<T>::multi_reverse_iterator::multi_reverse_iterator(const base_iterator& other)
+        : const_desc_iterator(other)
+    {
+    }
+
+    template <typename T>
+    FrankList<T>::multi_reverse_iterator::multi_reverse_iterator(base_iterator&& other)
+        : const_desc_iterator(std::move(other))
+    {
+    }
+
+    template <typename T>
+    FrankList<T>::multi_reverse_iterator::multi_reverse_iterator(Node* ptr) : const_desc_iterator(ptr)
+    {
+    }
+
+    template <typename T>
+    const typename FrankList<T>::multi_reverse_iterator& FrankList<T>::multi_reverse_iterator::operator=(
+        const base_iterator& other)
+    {
+        if (this == &other)
+            return *this;
+
+        base_iterator::m_Ptr = other.m_Ptr;
+        return *this;
+    }
+
+    template <typename T>
+    const typename FrankList<T>::multi_reverse_iterator& FrankList<T>::multi_reverse_iterator::operator=(
+        base_iterator&& other)
+    {
+        if (this == &other)
+            return *this;
+
+        base_iterator::m_Ptr = other.m_Ptr;
+        other.m_Ptr          = nullptr;
+        return *this;
+    }
+
+    template <typename T>
+    typename FrankList<T>::reference FrankList<T>::multi_reverse_iterator::operator*()
+    {
+        return base_iterator::m_Ptr->val;
+    }
+
+    template <typename T>
+    typename FrankList<T>::pointer FrankList<T>::multi_reverse_iterator::operator->()
+    {
+        return base_iterator::m_Ptr->val;
+    }
+
+    template <typename T>
+    void FrankList<T>::const_multi_reverse_iterator::chmod()
+    {
+        mode = !mode;
+    }
+
+    template <typename T>
     FrankList<T>::Node::Node() : val(T()), next(nullptr), prev(nullptr), asc(nullptr), desc(nullptr)
     {
     }
@@ -564,7 +840,7 @@ namespace vhuk {
     }
 
     template <typename T>
-    FrankList<T>::FrankList(const FrankList<T>& other)
+    FrankList<T>::FrankList(const FrankList<T>& other) : FrankList()
     {
         for (const auto& e : other)
             push_back(e);
@@ -583,7 +859,7 @@ namespace vhuk {
     }
 
     template <typename T>
-    template <typename input_iterator>
+    template <typename input_iterator, typename>
     FrankList<T>::FrankList(input_iterator begin, input_iterator end)
     {
         for (auto it = begin; it != end; ++it)
@@ -620,22 +896,63 @@ namespace vhuk {
     {
         size_type len     = 0;
         auto*     current = m_Head;
-        while (current->next && ++len)
-            current = current->next;
+        if (current)
+        {
+            while (++len && current->next)
+                current = current->next;
+        }
         return len;
     }
 
     template <typename T>
     bool FrankList<T>::empty() const
     {
-        return m_Head;
+        return !m_Head;
+    }
+
+    template <typename T>
+    void FrankList<T>::resize(size_type new_size, const_reference init)
+    {
+        const auto len = size();
+        if (new_size > len)
+        {
+            // If we're extending the list then just push_back()
+            // new_size - len init elements.
+            auto* current = m_Tail;
+            for (auto i = 0; i < new_size - len; ++i)
+                push_back(init);
+        }
+        else if (new_size < len)
+        {
+            // Else just detach starting from the tail going backwards.
+            auto* current = m_Tail;
+            for (auto i = 0; i < len - new_size; ++i)
+            {
+                detach_node(current);
+                auto* prev = current;
+                current    = current->prev;
+                delete prev;
+            }
+        }
     }
 
     template <typename T>
     void FrankList<T>::clear() noexcept
     {
-        // Tihs is not supposed to be noexcept because the
-        // delete operator is capable of throwing an exception.
+        auto* current = m_Head;
+        if (current)
+        {
+            while (current)
+            {
+                auto* temp = current;
+                current    = current->next;
+                delete temp;
+            }
+            m_Head  = nullptr;
+            m_Tail  = nullptr;
+            m_AHead = nullptr;
+            m_ATail = nullptr;
+        }
     }
 
     template <typename T>
@@ -807,6 +1124,58 @@ namespace vhuk {
     }
 
     template <typename T>
+    bool FrankList<T>::operator==(const FrankList<T>& other) const
+    {
+        if (size() != other.size())
+            return false;
+
+        auto it  = cbegin();
+        auto it2 = other.cbegin();
+        while (it != cend() && it2 != other.cend())
+        {
+            if (*it != *it)
+                return false;
+            ++it, ++it2;
+        }
+        return true;
+    }
+
+    /* ADDED BY ME */
+    // Instead of implementing all the operators we can only implement == and <=> in C++20
+    // which will add automatic support for all the others.
+    template <typename T>
+    auto FrankList<T>::operator<=>(const FrankList<T>& other) const
+    {
+        auto it  = cbegin();
+        auto it2 = other.cbegin();
+
+        // Iterate over the two lists simultaneously
+        // and check if the current element of it is lesser or greater,
+        // if lesser than immediately return strong::less, strong::greater
+        // otherwise, if none is true then they're equal so proceed.
+        while (it != cend() && it2 != other.cend())
+        {
+            if (*it < *it2)
+                return std::strong_ordering::less;
+            else if (*it > *it2)
+                return std::strong_ordering::greater;
+
+            ++it, ++it2;
+        }
+
+        // Here if it is an end iterator then it2 is lexicographcailly greater,
+        // it otherwise.
+        if (it != cend())
+            return std::strong_ordering::greater;
+        else if (it2 != other.cend())
+            return std::strong_ordering::less;
+
+        // If none is true then they're equal.
+        return std::strong_ordering::equal;
+    }
+    /* ... */
+
+    template <typename T>
     typename FrankList<T>::const_iterator FrankList<T>::cbegin() const
     {
         return const_iterator(m_Head);
@@ -815,7 +1184,7 @@ namespace vhuk {
     template <typename T>
     typename FrankList<T>::const_iterator FrankList<T>::cend() const
     {
-        return const_iterator(m_Tail);
+        return const_iterator(nullptr);
     }
 
     template <typename T>
@@ -827,7 +1196,7 @@ namespace vhuk {
     template <typename T>
     typename FrankList<T>::const_reverse_iterator FrankList<T>::crend() const
     {
-        return const_reverse_iterator(m_Head);
+        return const_reverse_iterator(nullptr);
     }
 
     template <typename T>
@@ -839,7 +1208,7 @@ namespace vhuk {
     template <typename T>
     typename FrankList<T>::const_asc_iterator FrankList<T>::caend() const
     {
-        return const_asc_iterator(m_ATail);
+        return const_asc_iterator(nullptr);
     }
 
     template <typename T>
@@ -851,7 +1220,59 @@ namespace vhuk {
     template <typename T>
     typename FrankList<T>::const_desc_iterator FrankList<T>::cdend() const
     {
-        return const_desc_iterator(m_AHead);
+        return const_desc_iterator(nullptr);
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_multi_iterator FrankList<T>::cmbegin() const
+    {
+        return const_multi_iterator(m_Head);
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_multi_iterator FrankList<T>::cmend() const
+    {
+        return const_multi_iterator(nullptr);
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_multi_iterator FrankList<T>::cmabegin() const
+    {
+        auto it = const_multi_iterator(m_AHead);
+        it.chmod();
+        return it;
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_multi_iterator FrankList<T>::cmaend() const
+    {
+        auto it = const_multi_iterator(nullptr);
+        it.chmod();
+        return it;
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_multi_reverse_iterator FrankList<T>::cmrbegin() const
+    {
+        return const_multi_reverse_iterator(m_Tail);
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_multi_reverse_iterator FrankList<T>::cmrend() const
+    {
+        return const_multi_reverse_iterator(nullptr);
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_multi_reverse_iterator FrankList<T>::cmrdbegin() const
+    {
+        return const_multi_reverse_iterator(m_ATail);
+    }
+
+    template <typename T>
+    typename FrankList<T>::const_multi_reverse_iterator FrankList<T>::cmrdend() const
+    {
+        return const_multi_reverse_iterator(nullptr);
     }
 
     /* ADDED BY ME */
@@ -886,65 +1307,106 @@ namespace vhuk {
     template <typename T>
     typename FrankList<T>::iterator FrankList<T>::begin()
     {
-        return iterator(m_Head);
+        return cbegin();
     }
 
     template <typename T>
     typename FrankList<T>::iterator FrankList<T>::end()
     {
-        return iterator(m_Tail);
+        return cend();
     }
 
     template <typename T>
     typename FrankList<T>::reverse_iterator FrankList<T>::rbegin()
     {
-        return reverse_iterator(m_Tail);
+        return crbegin();
     }
 
     template <typename T>
     typename FrankList<T>::reverse_iterator FrankList<T>::rend()
     {
-        return reverse_iterator(m_Head);
+        return crend();
     }
 
     template <typename T>
     typename FrankList<T>::asc_iterator FrankList<T>::abegin()
     {
-        return asc_iterator(m_AHead);
+        return cabegin();
     }
 
     template <typename T>
     typename FrankList<T>::asc_iterator FrankList<T>::aend()
     {
-        return asc_iterator(m_ATail);
+        return caend();
     }
 
     template <typename T>
     typename FrankList<T>::desc_iterator FrankList<T>::dbegin()
     {
-        return desc_iterator(m_ATail);
+        return cdbegin();
     }
 
     template <typename T>
     typename FrankList<T>::desc_iterator FrankList<T>::dend()
     {
-        return desc_iterator(m_AHead);
+        return cdend();
+    }
+
+    template <typename T>
+    typename FrankList<T>::multi_iterator FrankList<T>::mbegin()
+    {
+        return cmbegin();
+    }
+
+    template <typename T>
+    typename FrankList<T>::multi_iterator FrankList<T>::mend()
+    {
+        return cmend();
+    }
+
+    template <typename T>
+    typename FrankList<T>::multi_iterator FrankList<T>::mabegin()
+    {
+        return cmabegin();
+    }
+
+    template <typename T>
+    typename FrankList<T>::multi_iterator FrankList<T>::maend()
+    {
+        return cmaend();
+    }
+
+    template <typename T>
+    typename FrankList<T>::multi_reverse_iterator FrankList<T>::mrbegin()
+    {
+        return cmrbegin();
+    }
+
+    template <typename T>
+    typename FrankList<T>::multi_reverse_iterator FrankList<T>::mrend()
+    {
+        return cmrend();
+    }
+
+    template <typename T>
+    typename FrankList<T>::multi_reverse_iterator FrankList<T>::mrdbegin()
+    {
+        return cmrdbegin();
+    }
+
+    template <typename T>
+    typename FrankList<T>::multi_reverse_iterator FrankList<T>::mrdend()
+    {
+        return cmrdend();
     }
 
     template <typename T>
     template <typename iter>
     iter FrankList<T>::insert(iter pos, size_type size, const_reference val)
     {
-        Node* node = pos.m_Ptr;
+        auto current_pos = pos;
         for (auto i = 0; i < size; ++i)
-        {
-            auto* prev_next = node->next;
-            auto* new_node  = new Node(val);
-            node->next      = new_node;
-            new_node->next  = prev_next;
-            node            = new_node;
-            put_in_sorted_order(new_node);
-        }
+            current_pos = insert_def(current_pos, val);
         return pos;
     }
 
@@ -952,16 +1414,9 @@ namespace vhuk {
     template <typename iter>
     iter FrankList<T>::insert(iter pos, std::initializer_list<T> init)
     {
-        Node* node = pos.m_Ptr;
+        auto current_pos = pos;
         for (const auto& e : init)
-        {
-            auto* prev_next = node->next;
-            auto* new_node  = new Node(e);
-            node->next      = new_node;
-            new_node->next  = prev_next;
-            node            = new_node;
-            put_in_sorted_order(new_node);
-        }
+            current_pos = insert_def(current_pos, e);
         return pos;
     }
 
@@ -969,26 +1424,9 @@ namespace vhuk {
     template <typename iter, typename input_iterator>
     iter FrankList<T>::insert(iter pos, input_iterator begin, input_iterator end)
     {
-        Node* node = pos.m_Ptr;
-        Node* new_node = nullptr;
+        auto current_pos = pos;
         for (auto it = begin; it != end; ++it)
-        {
-            new_node = new Node(*it);
-            if (node)
-            {
-                auto* prev_next = node->next;
-                node->next      = new_node;
-                new_node->next  = prev_next;
-            }
-            else
-                m_Head = new_node;
-            node = new_node;
-            put_in_sorted_order(new_node);
-        }
-        
-        if (pos.m_Ptr == m_Tail)
-            m_Tail = new_node;
-
+            current_pos = insert_def(current_pos, *it);
         return pos;
     }
 
@@ -996,32 +1434,47 @@ namespace vhuk {
     template <typename iter>
     iter FrankList<T>::erase(iter pos)
     {
-        Node* node       = pos.m_Ptr;
-        if (node->prev)
+        Node* node = nullptr;
+
+        // Check if begin is not any end iterator because
+        // end here is just nullptr, so if we have an end iterator
+        // as our starting point then replace it with the appropriate
+        // tail pointer.
+        if (pos == cend())
+            node = m_Tail;
+        else if (pos == crend())
+            node = m_Head;
+        else if (pos == caend())
+            node = m_ATail;
+        else if (pos == cdend())
+            node = m_AHead;
+        else if (pos == cmend())
         {
-            node->prev->next = node->next;
-            if (node == m_Tail)
-                m_Tail = node->prev;
+            if constexpr (
+                std::is_base_of_v<const_multi_iterator, iter> || std::is_base_of_v<const_multi_reverse_iterator, iter>)
+            {
+                if (pos.mode)
+                    node = m_Tail;
+                else
+                    node = m_ATail;
+            }
         }
-        if (node->next)
+        else if (pos == cmrend())
         {
-            node->next->prev = node->prev;
-            if (node == m_Head)
-                m_Head = node->next;
+            if constexpr (
+                std::is_base_of_v<const_multi_iterator, iter> || std::is_base_of_v<const_multi_reverse_iterator, iter>)
+            {
+                if (pos.mode)
+                    node = m_Head;
+                else
+                    node = m_AHead;
+            }
         }
-        if (node->desc)
-        {
-            node->desc->asc  = node->asc;
-            if (node == m_ATail)
-                m_ATail = node->desc;
-        }
-        if (node->asc)
-        {
-            node->asc->desc = node->desc;
-            if (node == m_ATail)
-                m_ATail = node->asc;
-        }
-        
+        else
+            node = pos.m_Ptr;
+
+        // Simply detach the node and then delete the node.
+        detach_node(node);
         delete node;
         return pos;
     }
@@ -1030,16 +1483,176 @@ namespace vhuk {
     template <typename iter>
     iter FrankList<T>::erase(iter begin, iter end)
     {
-        for (auto it = begin; it != end; ++it)
-            erase(it);
+        auto  it   = begin;
+        Node* node = nullptr;
+
+        // Check if begin is not any end iterator because
+        // end here is just nullptr, so if we have an end iterator
+        // as our starting point then replace it with the appropriate
+        // tail pointer.
+        if (begin == cend())
+            node = m_Tail;
+        else if (begin == crend())
+            node = m_Head;
+        else if (begin == caend())
+            node = m_ATail;
+        else if (begin == cdend())
+            node = m_AHead;
+        else if (begin == cmend())
+        {
+            if constexpr (
+                std::is_base_of_v<const_multi_iterator, iter> || std::is_base_of_v<const_multi_reverse_iterator, iter>)
+            {
+                if (begin.mode)
+                    node = m_Tail;
+                else
+                    node = m_ATail;
+            }
+        }
+        else if (begin == cmrend())
+        {
+            if constexpr (
+                std::is_base_of_v<const_multi_iterator, iter> || std::is_base_of_v<const_multi_reverse_iterator, iter>)
+            {
+                if (begin.mode)
+                    node = m_Head;
+                else
+                    node = m_AHead;
+            }
+        }
+        else
+            node = begin.m_Ptr;
+
+        // Iterate over the supplied iterator range,
+        // increment first, then detach the node belonging to that iterator,
+        // delete it and assign node to be our current iterator's (now incremented) node.
+        while (it != end)
+        {
+            ++it;
+            detach_node(node);
+            delete node;
+            node = it.m_Ptr;
+        }
         return end;
     }
 
     template <typename T>
-    typename FrankList<T>::size_type FrankList<T>::remove(const_reference val)
+    typename FrankList<T>::iterator FrankList<T>::remove(const_reference val)
     {
-        size_type count = 0;
-        return count;
+        // Create an iterator from our current tail for comparison.
+        auto end_it = iterator(m_Tail);
+        auto it     = begin();
+
+        // Iterate over the container and check if they match to val,
+        // if they do then grab the node, detach it and attach to to the tail
+        // until we reach the end.
+        while (it != end_it)
+        {
+            auto* node = it.m_Ptr;
+            ++it;
+            if (node->val == val)
+            {
+                detach_node(node);
+                m_Tail->next = node;
+                node->prev   = m_Tail;
+                m_Tail       = node;
+            }
+        }
+
+        // After iterating until the previous end (end_it), it might be possible
+        // that end_it is also equal to val, so check for that too, otherwise
+        // go past it.
+        if (*end_it != val)
+            ++end_it;
+        return end_it;
+    }
+
+    template <typename T>
+    template <typename unary_predicate>
+    typename FrankList<T>::iterator FrankList<T>::remove_if(unary_predicate fn)
+    {
+        // Create an iterator from our current tail for comparison.
+        auto end_it = iterator(m_Tail);
+        auto it     = begin();
+
+        // Iterate over the container and check if they match to val,
+        // if they do then grab the node, detach it and attach to to the tail
+        // until we reach the end.
+        while (it != end_it)
+        {
+            auto* node = it.m_Ptr;
+            ++it;
+            if (fn(node->val))
+            {
+                detach_node(node);
+                m_Tail->next = node;
+                node->prev   = m_Tail;
+                m_Tail       = node;
+            }
+        }
+
+        // After iterating until the previous end (end_it), it might be possible
+        // that end_it is also equal to val, so check for that too, otherwise
+        // go past it.
+        if (!fn(*end_it))
+            ++end_it;
+        return end_it;
+    }
+
+    template <typename T>
+    void FrankList<T>::reverse()
+    {
+        Node* temp    = nullptr;
+        Node* current = m_Head;
+
+        // Traverse the list and swap the next and
+        // previous pointers for each node.
+        while (current != nullptr)
+        {
+            temp          = current->prev;
+            current->prev = current->next;
+            current->next = temp;
+            current       = current->prev;
+        }
+
+        // Update the head to point to the
+        // new first node in the reversed list.
+        if (temp != nullptr)
+            m_Head = temp->prev;
+    }
+
+    template <typename T>
+    void FrankList<T>::sort(bool reversed)
+    {
+        if (empty())
+            return;
+
+        // We sort the list by simply iterating over
+        // the sorted order using asc_iterator and
+        // desc_iterator (if reversed is true) and simply
+        // assign the next and prev pointers to asc and desc
+        // (or vice versa if reversed is true).
+        // We also do the exact same thing with m_Head and m_Tail.
+        if (reversed)
+        {
+            for (auto it = dbegin(); it != dend(); ++it)
+            {
+                it.m_Ptr->next = it.m_Ptr->desc;
+                it.m_Ptr->prev = it.m_Ptr->asc;
+            }
+            m_Head = m_ATail;
+            m_Tail = m_AHead;
+        }
+        else
+        {
+            for (auto it = abegin(); it != aend(); ++it)
+            {
+                it.m_Ptr->next = it.m_Ptr->asc;
+                it.m_Ptr->prev = it.m_Ptr->desc;
+            }
+            m_Head = m_AHead;
+            m_Tail = m_ATail;
+        }
     }
 
     template <typename T>
@@ -1048,8 +1661,18 @@ namespace vhuk {
         for (auto it = begin(); it != end(); ++it)
         {
             if (*it == elem)
-                return it;
+            {
+                // If our node is not the left most node,
+                // then move it once to the left and then
+                // create a new iterator from it, and finally
+                // return it.
+                auto* node = it.m_Ptr;
+                if (it != begin())
+                    organize_left(node);
+                return decltype(it)(node);
+            }
         }
+        return end();
     }
 
     template <typename T>
@@ -1058,14 +1681,28 @@ namespace vhuk {
         for (auto it = rbegin(); it != rend(); ++it)
         {
             if (*it == elem)
-                return it;
+            {
+                // If our node is not the right most node,
+                // then move it once to the right and then
+                // create a new iterator from it, and finally
+                // return it.
+                auto* node = it.m_Ptr;
+                if (it != rbegin())
+                    organize_right(node);
+                return decltype(it)(node);
+            }
         }
+        return rend();
     }
 
     template <typename T>
     template <typename unary_predicate>
     void FrankList<T>::traverse(unary_predicate fn, bool sorted, bool reversed)
     {
+        // Simply traverse using the provided iterators
+        // based on the parameters and assume fn is a
+        // function that returns nothing and takes a single
+        // parameter of type 'reference' or 'value_type' (const versions also).
         if (sorted)
         {
             if (reversed)
@@ -1095,28 +1732,63 @@ namespace vhuk {
     }
 
     template <typename T>
-    void FrankList<T>::print(bool sorted, bool reversed)
+    void FrankList<T>::print(bool sorted, bool reversed) const
     {
+        // Almost identical to traverse() except we do not
+        // call a function on the element
+        // instead we print the element.
         if (sorted)
         {
             if (reversed)
             {
-                for (auto it = dbegin(); it != dend(); ++it) {}
+                std::cout << "[ ";
+                for (auto it = cdbegin(); it != cdend(); ++it)
+                {
+                    if (std::next(it) != cdend())
+                        std::cout << *it << ", ";
+                    else
+                        std::cout << *it;
+                }
+                std::cout << " ]";
             }
             else
             {
-                for (auto it = abegin(); it != aend(); ++it) {}
+                std::cout << "[ ";
+                for (auto it = cabegin(); it != caend(); ++it)
+                {
+                    if (std::next(it) != caend())
+                        std::cout << *it << ", ";
+                    else
+                        std::cout << *it;
+                }
+                std::cout << " ]";
             }
         }
         else
         {
             if (reversed)
             {
-                for (auto it = rbegin(); it != rend(); ++it) {}
+                std::cout << "[ ";
+                for (auto it = crbegin(); it != crend(); ++it)
+                {
+                    if (std::next(it) != crend())
+                        std::cout << *it << ", ";
+                    else
+                        std::cout << *it;
+                }
+                std::cout << " ]";
             }
             else
             {
-                for (auto& e : *this) {}
+                std::cout << "[ ";
+                for (auto it = cbegin(); it != cend(); ++it)
+                {
+                    if (std::next(it) != cend())
+                        std::cout << *it << ", ";
+                    else
+                        std::cout << *it;
+                }
+                std::cout << " ]";
             }
         }
     }
@@ -1131,9 +1803,9 @@ namespace vhuk {
             while (current->asc && ptr->val > current->val)
                 current = current->asc;
 
-            // Check to see if our node is lesser than the
+            // Check to see if our node is lesser or equal to the
             // largest found node.
-            if (ptr->val < current->val)
+            if (ptr->val <= current->val)
             {
                 // If it is then fit it in-between our largest
                 // node and its predecessor.
@@ -1171,6 +1843,313 @@ namespace vhuk {
             m_AHead = ptr;
             m_ATail = ptr;
         }
+    }
+
+    template <typename T>
+    void FrankList<T>::organize_left(Node* node)
+    {
+        // Grab our current node's next and previous nodes.
+        auto* prev_node = node->prev;
+        auto* next_node = node->next;
+
+        // Swap our node to point to our previous node
+        // and our previous node's previous to point
+        // to our node.
+        node->prev = prev_node->prev;
+        node->next = prev_node;
+
+        // If we have a previous then make
+        // the previous' next to point to our node,
+        // otherwise it's the head so make our head
+        // point to our node.
+        if (prev_node->prev)
+            prev_node->prev->next = node;
+        else
+            m_Head = node;
+
+        // Next swap our node and the previous
+        // node in our previous node's perspective.
+        prev_node->prev = node;
+        prev_node->next = next_node;
+
+        // Afterwhich check if our node had a next,
+        // if it did then make the next's node's previous
+        // to be our previous node, otherwise its the
+        // tail so make the tail point to our previous node.
+        if (next_node)
+            next_node->prev = prev_node;
+        else
+            m_Tail = prev_node;
+    }
+
+    template <typename T>
+    void FrankList<T>::organize_right(Node* node)
+    {
+        // Grab our current node's next and previous nodes.
+        auto* prev_node = node->prev;
+        auto* next_node = node->next;
+
+        // Swap our node to point to its previous next's next
+        // node and then make the preivous point to its previous next.
+        node->prev = next_node;
+        node->next = next_node->next;
+
+        // If we have a next then make
+        // the next's previous to point to our node,
+        // otherwise it's the tail so make our tail
+        // point to our node.
+        if (next_node->next)
+            next_node->next->prev = node;
+        else
+            m_Tail = node;
+
+        // Next swap our next node's next to point
+        // to our current node and its previous to
+        // be our node's previous.
+        next_node->next = node;
+        next_node->prev = prev_node;
+
+        // Afterwhich check if our node had a previous,
+        // if it did then make previous's node's next
+        // to be our node's next, otherwise its the head
+        // head point to our node's next node.
+        if (prev_node)
+            prev_node->next = next_node;
+        else
+            m_Head = next_node;
+    }
+
+    /* ADDED BY ME */
+    // Handy private utility function that does what the
+    // name suggests.
+    // It effectively detaches the given node
+    // while maintaing the correct order
+    // both in regular and sorted ordering.
+    template <typename T>
+    void FrankList<T>::detach_node(Node* node) noexcept
+    {
+        if (node->prev)
+            node->prev->next = node->next;
+        else
+            m_Head = node->next;
+
+        if (node->next)
+            node->next->prev = node->prev;
+        else
+            m_Tail = node->prev;
+
+        if (node->desc)
+            node->desc->asc = node->asc;
+        else
+            m_AHead = node->asc;
+
+        if (node->asc)
+            node->asc->desc = node->desc;
+        else
+            m_ATail = node->desc;
+
+        node->next = nullptr;
+        node->prev = nullptr;
+        node->asc  = nullptr;
+        node->desc = nullptr;
+    }
+    /* ... */
+
+    template <typename T>
+    template <typename iter>
+    iter FrankList<T>::insert_def(iter pos, const_reference val)
+    {
+        auto* node = pos.m_Ptr;
+
+        // Check if begin is not any end iterator because
+        // end here is just nullptr, so if we have an end iterator
+        // as our starting point then replace it with the appropriate
+        // tail pointer.
+        if (pos == cend())
+            node = m_Tail;
+        else if (pos == crend())
+            node = m_Head;
+        else if (pos == caend())
+            node = m_ATail;
+        else if (pos == cdend())
+            node = m_AHead;
+        else if (pos == cmend())
+        {
+            if constexpr (
+                std::is_base_of_v<const_multi_iterator, iter> || std::is_base_of_v<const_multi_reverse_iterator, iter>)
+            {
+                if (pos.mode)
+                    node = m_Tail;
+                else
+                    node = m_ATail;
+            }
+        }
+        else if (pos == cmrend())
+        {
+            if constexpr (
+                std::is_base_of_v<const_multi_iterator, iter> || std::is_base_of_v<const_multi_reverse_iterator, iter>)
+            {
+                if (pos.mode)
+                    node = m_Head;
+                else
+                    node = m_AHead;
+            }
+        }
+        else
+            node = pos.m_Ptr;
+
+        auto* new_node = new Node(val);
+
+        // Check if our position node is valid.
+        if (node)
+        {
+            // Check if it's the tail.
+            if (node == m_Tail)
+            {
+                // If it is then just attach the new node to the tail and
+                // then make it the new tail.
+                auto* prev_next = node->next;
+                node->next      = new_node;
+                new_node->next  = prev_next;
+                new_node->prev  = node;
+                m_Tail          = new_node;
+            }
+            else
+            {
+                // Else attach node to new_node instead.
+                new_node->next = node;
+                new_node->prev = node->prev;
+                if (node->prev)
+                    node->prev->next = new_node;
+                node->prev = new_node;
+
+                // node might also be the head so update the head if it is.
+                if (node == m_Head)
+                    m_Head = new_node;
+            }
+        }
+        else
+        {
+            // If node is invalid then either the list is empty
+            // or the supplied iterator is invalid.
+            if (!m_Head)
+            {
+                m_Head = new_node;
+                m_Tail = new_node;
+            }
+            else
+                throw std::invalid_argument("Supplied iterator is invalid.");
+        }
+
+        // Sort the new node.
+        put_in_sorted_order(new_node);
+        return iter(new_node->next);
+    }
+
+    template <typename T>
+    template <typename iter>
+    iter FrankList<T>::insert_rev(iter pos, const_reference val)
+    {
+        auto* node = pos.m_Ptr;
+
+        // Check if begin is not any end iterator because
+        // end here is just nullptr, so if we have an end iterator
+        // as our starting point then replace it with the appropriate
+        // tail pointer.
+        if (pos == cend())
+            node = m_Tail;
+        else if (pos == crend())
+            node = m_Head;
+        else if (pos == caend())
+            node = m_ATail;
+        else if (pos == cdend())
+            node = m_AHead;
+        else if (pos == cmend())
+        {
+            if constexpr (
+                std::is_base_of_v<const_multi_iterator, iter> || std::is_base_of_v<const_multi_reverse_iterator, iter>)
+            {
+                if (pos.mode)
+                    node = m_Tail;
+                else
+                    node = m_ATail;
+            }
+        }
+        else if (pos == cmrend())
+        {
+            if constexpr (
+                std::is_base_of_v<const_multi_iterator, iter> || std::is_base_of_v<const_multi_reverse_iterator, iter>)
+            {
+                if (pos.mode)
+                    node = m_Head;
+                else
+                    node = m_AHead;
+            }
+        }
+        else
+            node = pos.m_Ptr;
+
+        auto* new_node = new Node(val);
+
+        // Check if our position node is valid.
+        if (node)
+        {
+            // Check if it's the tail.
+            if (node == m_Tail)
+            {
+                // If it is then just attach the new node to the tail and
+                // then make it the new tail.
+                auto* prev_next = node->next;
+                node->next      = new_node;
+                new_node->next  = prev_next;
+                new_node->prev  = node;
+                m_Tail          = new_node;
+            }
+            else
+            {
+                // Else attach node to new_node instead.
+                new_node->next = node;
+                new_node->prev = node->prev;
+                if (node->prev)
+                    node->prev->next = new_node;
+                node->prev = new_node;
+
+                // node might also be the head so update the head if it is.
+                if (node == m_Head)
+                    m_Head = new_node;
+            }
+        }
+        else
+        {
+            // If node is invalid then either the list is empty
+            // or the supplied iterator is invalid.
+            if (!m_Head)
+            {
+                m_Head = new_node;
+                m_Tail = new_node;
+            }
+            else
+                throw std::invalid_argument("Supplied iterator is invalid.");
+        }
+
+        // Sort the new node.
+        put_in_sorted_order(new_node);
+        return iter(new_node->prev);
+    }
+
+    template <typename U>
+    std::ostream& operator<<(std::ostream& stream, const FrankList<U>& other)
+    {
+        stream << "[ ";
+        for (auto it = other.cbegin(); it != other.cend(); ++it)
+        {
+            if (std::next(it) != other.cend())
+                std::cout << *it << ", ";
+            else
+                std::cout << *it;
+        }
+        stream << " ]";
+        return stream;
     }
 } // namespace vhuk
 

@@ -6,10 +6,11 @@ auto main(int argc, char* argv[]) -> int
 {
     using namespace vhuk;
 
-    FrankList<int> f{ 5, 6, 1, 8, 2, 10, 4, 12, 9, 4 };
-
-    f.erase(std::next(f.begin(), 2), f.end());
-    std::cout << f << std::endl << std::endl;
+    FrankList<int> f{ 1, 1, 5, 1, 1, 3, 1, 1, 1 };
+    f.insert(f.end(), 9);
+    std::cout << f << std::endl;
+    f.erase(f.remove_if([](auto& e) { return true; }), f.end());
+    std::cout << f << std::endl;
 
     return 0;
 }

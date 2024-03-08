@@ -1,8 +1,11 @@
 #ifndef FRANKLIST_H
 #define FRANKLIST_H
 
+#include <compare>
+#include <exception>
 #include <iostream>
 #include <iterator>
+#include <type_traits>
 
 namespace vhuk {
     template <typename T>
@@ -31,7 +34,7 @@ namespace vhuk {
     public:
         class base_iterator
         {
-            friend FrankList<value_type>;
+            friend FrankList<T>;
 
         public:
             using value_type        = T;
@@ -39,7 +42,7 @@ namespace vhuk {
             using pointer           = value_type*;
             using const_pointer     = const value_type*;
             using reference         = value_type&;
-            using const_reference = const value_type&;
+            using const_reference   = const value_type&;
             using iterator_category = std::bidirectional_iterator_tag;
 
         protected:
@@ -313,7 +316,8 @@ namespace vhuk {
         FrankList(const FrankList<value_type>& rhv);              // O(n)
         FrankList(FrankList<value_type>&& rhv);                   // O(1)
         FrankList(const std::initializer_list<value_type>& init); // O(n)
-        template <typename input_iterator>
+        template <typename input_iterator,
+                  typename = std::enable_if_t<std::is_base_of_v<base_iterator, input_iterator>>>
         FrankList(input_iterator f, input_iterator l); // O(n)
         ~FrankList();
 
@@ -344,12 +348,8 @@ namespace vhuk {
         const FrankList<value_type>& operator=(FrankList<value_type>&& rhv);            // O(n)
         const FrankList<value_type>& operator=(std::initializer_list<value_type> init); // O(n)
 
-        bool operator==(const FrankList<value_type>& rhv) const; // O(n)
-        bool operator!=(const FrankList<value_type>& rhv) const; // O(n)
-        bool operator<(const FrankList<value_type>& rhv) const;  // O(n)
-        bool operator<=(const FrankList<value_type>& rhv) const; // O(n)
-        bool operator>(const FrankList<value_type>& rhv) const;  // O(n)
-        bool operator>=(const FrankList<value_type>& rhv) const; // O(n)
+        bool operator==(const FrankList<T>& other) const;
+        auto operator<=>(const FrankList<T>& other) const; // O(n)
 
     public:
         const_iterator               cbegin() const;    // O(1)
@@ -423,9 +423,9 @@ namespace vhuk {
         template <typename iter>
         iter erase(iter f, iter l); // O(n)
 
-        size_type remove(const_reference val); // O(n)
+        iterator remove(const_reference val); // O(n)
         template <typename unary_predicate>
-        size_type remove_if(unary_predicate func); // O(n)
+        iterator remove_if(unary_predicate func); // O(n)
 
         void reverse();                   // O(n)
         void sort(bool reversed = false); // O(n)
@@ -437,49 +437,23 @@ namespace vhuk {
         void traverse(unary_predicate func, bool sorted = false,
                       bool reversed = false); // O(n)
 
-        void print(bool sorted = false, bool reversed = false); // O(n)
+        void print(bool sorted = false, bool reversed = false) const; // O(n)
 
     protected:
         void put_in_sorted_order(Node* ptr); // O(n)
         void organize_left(Node* ptr);       // O(1)
         void organize_right(Node* ptr);      // O(1)
+
     private:
+        void detach_node(Node* node) noexcept; // O(1)
         template <typename iter>
         iter insert_def(iter pos, const_reference val); // O(1)
-
         template <typename iter>
         iter insert_rev(iter pos, const_reference val); // O(1)
 
-        friend std::ostream& operator<<(std::ostream& stream, const FrankList<T>& other)
-        {
-            stream << "REG: [ ";
-            auto* current = other.m_Head;
-            while (current)
-            {
-                stream << current->val << ' ';
-                current = current->next;
-            }
-            stream << "]" << std::endl;
-
-            stream << "ASC: [ ";
-            current = other.m_AHead;
-            while (current)
-            {
-                stream << current->val << ' ';
-                current = current->asc;
-            }
-
-            stream << "]" << std::endl;
-            stream << "DESC: [ ";
-            current = other.m_ATail;
-            while (current)
-            {
-                stream << current->val << ' ';
-                current = current->desc;
-            }
-            stream << "]";
-            return stream;
-        }
+    public:
+        template <typename U>
+        friend std::ostream& operator<<(std::ostream& stream, const FrankList<U>& other);
     };
 } // namespace vhuk
 
